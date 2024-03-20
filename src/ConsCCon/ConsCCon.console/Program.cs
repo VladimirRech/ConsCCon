@@ -13,6 +13,15 @@ namespace ConsCCon.console
         {
             Console.WriteLine("Lendo configurações");
             Configuracao cfg = Configuracao.LeConfiguracoes();
+
+            if (!cfg.ValidaConfiguracao())
+            {
+                Console.WriteLine($"Configurações inválidas: {cfg.UltimaMsgErro}");
+            }
+            else
+            {
+                Console.WriteLine("Configurações válidas.");
+            }
         }
     }
 }

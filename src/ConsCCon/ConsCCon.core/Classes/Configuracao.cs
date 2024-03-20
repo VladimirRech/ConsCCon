@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Configuration;
+using System.Text;
 
 namespace ConsCCon.core
 {
@@ -33,7 +30,73 @@ namespace ConsCCon.core
 
         public bool ValidaConfiguracao()
         {
-            return false;
+            var sb = new StringBuilder();
+
+            if (string.IsNullOrEmpty(CNPJCliente))
+            {
+                sb.AppendLine("Configurações: CNPJ do cliente inválido .");
+            }
+
+            if (string.IsNullOrEmpty(UFCliente))
+            {
+                sb.AppendLine("Configurações: UF do cliente inválida.");
+            }
+
+            if (string.IsNullOrEmpty(PastaEnvioUninfe))
+            {
+                sb.AppendLine("Configurações: Pasta de envio do UNINFE inválida.");
+            }
+            else
+            {
+                if (!System.IO.Directory.Exists(PastaEnvioUninfe))
+                {
+                    sb.AppendLine($"Configurações: a pasta {PastaEnvioUninfe} informada na chave PastaEnvioUninfe não existe.");
+                }
+            }
+
+            if (string.IsNullOrEmpty(PastaRetornoUninfe))
+            {
+                sb.AppendLine("Configurações: Pasta de retorno do UNINFE inválida.");
+            }
+            else
+            {
+                if (!System.IO.Directory.Exists(PastaRetornoUninfe))
+                {
+                    sb.AppendLine($"Configurações: a pasta {PastaRetornoUninfe} informada na chave PastaRetornoUninfe não existe.");
+                }
+            }
+
+            if (string.IsNullOrEmpty(PastaArquivoCSV))
+            {
+                sb.AppendLine("Configurações: Pasta de geração do arquivo CSV inválida.");
+            }
+            else
+            {
+                if (!System.IO.Directory.Exists(PastaArquivoCSV))
+                {
+                    sb.AppendLine($"Configurações: a pasta {PastaArquivoCSV} informada na chave PastaArquivoCSV não existe.");
+                }
+            }
+
+            if (LinhaInicialBaseCNPJ < 1)
+            {
+                sb.AppendLine("Configurações: Linha inicial para leitura da base de CNPJ inválida.");
+            }
+            
+            if (ColunaInicialBaseCnpj < 1)
+            {
+                sb.AppendLine("Configurações: Coluna inicial para leitura da base de CNPJ inválida.");
+            }
+
+            if (sb.Length > 0)
+            {
+                UltimaMsgErro = sb.ToString();
+                UltimoTimeStampErro = DateTime.Now;
+                StackErro = "";
+                return false;
+            }
+
+            return true;
         }
     }
 }
