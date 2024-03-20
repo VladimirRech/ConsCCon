@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ConsCCon.core;
 
 namespace ConsCCon.console
 {
@@ -10,6 +11,8 @@ namespace ConsCCon.console
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Lendo configurações");
+            Configuracao cfg = Configuracao.LeConfiguracoes();
         }
     }
 }
