@@ -16,6 +16,8 @@ namespace ConsCCon.core
 
         public static Configuracao LeConfiguracoes()
         {
+            Utils.RegistraLogApp("INFO: Lendo configurações.");
+
             return new Configuracao
             {
                 CNPJCliente = ConfigurationManager.AppSettings["CNPJCliente"]?.ToString(),
@@ -34,65 +36,64 @@ namespace ConsCCon.core
 
             if (string.IsNullOrEmpty(CNPJCliente))
             {
-                sb.AppendLine("Configurações: CNPJ do cliente inválido .");
+                sb.Append("Configurações: CNPJ do cliente inválido. ");
             }
 
             if (string.IsNullOrEmpty(UFCliente))
             {
-                sb.AppendLine("Configurações: UF do cliente inválida.");
+                sb.Append("Configurações: UF do cliente inválida. ");
             }
 
             if (string.IsNullOrEmpty(PastaEnvioUninfe))
             {
-                sb.AppendLine("Configurações: Pasta de envio do UNINFE inválida.");
+                sb.Append("Configurações: Pasta de envio do UNINFE inválida. ");
             }
             else
             {
                 if (!System.IO.Directory.Exists(PastaEnvioUninfe))
                 {
-                    sb.AppendLine($"Configurações: a pasta {PastaEnvioUninfe} informada na chave PastaEnvioUninfe não existe.");
+                    sb.Append($"Configurações: a pasta {PastaEnvioUninfe} informada na chave PastaEnvioUninfe não existe. ");
                 }
             }
 
             if (string.IsNullOrEmpty(PastaRetornoUninfe))
             {
-                sb.AppendLine("Configurações: Pasta de retorno do UNINFE inválida.");
+                sb.Append("Configurações: Pasta de retorno do UNINFE inválida. ");
             }
             else
             {
                 if (!System.IO.Directory.Exists(PastaRetornoUninfe))
                 {
-                    sb.AppendLine($"Configurações: a pasta {PastaRetornoUninfe} informada na chave PastaRetornoUninfe não existe.");
+                    sb.Append($"Configurações: a pasta {PastaRetornoUninfe} informada na chave PastaRetornoUninfe não existe. ");
                 }
             }
 
             if (string.IsNullOrEmpty(PastaArquivoCSV))
             {
-                sb.AppendLine("Configurações: Pasta de geração do arquivo CSV inválida.");
+                sb.Append("Configurações: Pasta de geração do arquivo CSV inválida. ");
             }
             else
             {
                 if (!System.IO.Directory.Exists(PastaArquivoCSV))
                 {
-                    sb.AppendLine($"Configurações: a pasta {PastaArquivoCSV} informada na chave PastaArquivoCSV não existe.");
+                    sb.Append($"Configurações: a pasta {PastaArquivoCSV} informada na chave PastaArquivoCSV não existe. ");
                 }
             }
 
             if (LinhaInicialBaseCNPJ < 1)
             {
-                sb.AppendLine("Configurações: Linha inicial para leitura da base de CNPJ inválida.");
+                sb.Append("Configurações: Linha inicial para leitura da base de CNPJ inválida. ");
             }
             
             if (ColunaInicialBaseCnpj < 1)
             {
-                sb.AppendLine("Configurações: Coluna inicial para leitura da base de CNPJ inválida.");
+                sb.Append("Configurações: Coluna inicial para leitura da base de CNPJ inválida. ");
             }
 
             if (sb.Length > 0)
             {
-                UltimaMsgErro = sb.ToString();
-                UltimoTimeStampErro = DateTime.Now;
                 StackErro = "";
+                UltimaMsgErro = "ERRO: Verifique o arquivo de configurações. " + sb.ToString();
                 return false;
             }
 

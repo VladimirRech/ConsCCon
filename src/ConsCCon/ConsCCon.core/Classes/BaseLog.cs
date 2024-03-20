@@ -11,15 +11,26 @@ namespace ConsCCon.core
     /// </summary>
     public class BaseLog
     {
-        public string UltimaMsgErro { get; set; }
-        public DateTime UltimoTimeStampErro { get; set; }
+        private string _ultimaMsgErro;
+
+        public string UltimaMsgErro
+        {
+            get
+            {
+                return _ultimaMsgErro;
+            }
+            set
+            {
+                _ultimaMsgErro = value;
+                Utils.RegistraLogApp($"{value} | {StackErro}");
+            }
+        }
         public string StackErro { get; set; }
 
         public void CapturaErro(Exception ex)
         {
-            UltimaMsgErro = ex.Message;
-            UltimoTimeStampErro = DateTime.Now;
             StackErro = ex.StackTrace;
+            UltimaMsgErro = ex.Message;
         }
     }
 }
