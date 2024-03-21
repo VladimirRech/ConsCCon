@@ -6,13 +6,13 @@ namespace ConsCCon.core
 {
     internal class Utils
     {
-        public static void RegistraLogApp(string texto)
+        internal static void RegistraLogApp(string texto)
         {
             var nomeArqLog = string.Format("CONSCCon_{0:yyyyMMdd}.log", DateTime.Now);
             GravaArquivo(string.Format("{0:yyyy-MM-dd HH:mm:ss}: {1}{2}", DateTime.Now, texto, Environment.NewLine), nomeArqLog, true);
         }
 
-        static bool GravaArquivo(string texto, string nomeArquivo, bool adiciona)
+        internal static bool GravaArquivo(string texto, string nomeArquivo, bool adiciona)
         {
             try
             {
