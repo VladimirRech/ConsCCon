@@ -9,10 +9,11 @@ namespace ConsCCon.core.Classes
     public class ServicoConsulta : BaseLog
     {
         public string CNPJ { get; set; }
+        public string UF { get; set; }
         public string xServ { get { return "CONS-CAD"; } }
         public string Versao { get { return "2.00"; } }
 
-        public bool GeraTxtConsulta(string UF, string pastaArquivo)
+        public bool GeraTxtConsulta(string uf, string pastaArquivo)
         {
             if (string.IsNullOrEmpty(CNPJ) || CNPJ.Length != 14)
             {
@@ -20,22 +21,23 @@ namespace ConsCCon.core.Classes
                 return false;
             }
 
-            if (string.IsNullOrEmpty(UF))
+            if (string.IsNullOrEmpty(uf))
             {
                 UltimaMsgErro = "ATENÇÃO: ServicoConsulta - UF informada em branco.";
                 return false;
             }
 
+            UF = uf;
             var nomeArquivo = Path.Combine(pastaArquivo, $"{CNPJ}-cons-cad.txt");
             var sb = new StringBuilder();
             sb.AppendLine($"xServ|{xServ}");
-            sb.AppendLine($"UF|{UF}");
+            sb.AppendLine($"UF|{uf}");
             sb.AppendLine($"CNPJ|{CNPJ}"); 
             sb.AppendLine($"Versao|{Versao}");
             return Utils.GravaArquivo(sb.ToString(), nomeArquivo, false);
         }
 
-        public bool ProcessaArqTxtBaseCnpj(string arquivo, int primeiraLinha, int primeiraColuna, string UF, string pastaArquivo)
+        public bool ProcessaArqTxtBaseCnpj(string arquivo, int colunaCnpj, int colunaUf, string pastaArquivo)
         {
             Utils.RegistraLogApp($"INFO: ServicoConsulta - Iniciando leitura do arquivo {arquivo}.");
 
@@ -46,8 +48,8 @@ namespace ConsCCon.core.Classes
             }
 
             // Tratamento para as configurações de primeira linha e coluna
-            primeiraColuna--;
-            primeiraLinha--;
+            colunaCnpj--;
+            colunaUf--;
             int contador = 0;
 
             try
@@ -58,19 +60,45 @@ namespace ConsCCon.core.Classes
 
                     while((linha = sr.ReadLine()) != null)
                     {
-                        if (contador >= primeiraLinha)
+                        if (contador == 0)
                         {
-                            if (linha.Length < 14 || linha.Length <= primeiraColuna || linha.Length <= (primeiraColuna + 14))
-                            {
-                                UltimaMsgErro = $"ATENÇÃO: ServicoConsulta - a linha nr. {contador} do arquivo {arquivo} tem um tamanho inválido.";
-                                contador++;
-                                continue;
-                            }
-
-                            CNPJ = linha.Substring(primeiraColuna, 14);
-                            GeraTxtConsulta(UF, pastaArquivo);
+                            contador++;
+                            continue;
                         }
 
+                        if (linha.Length < 17)
+                        {
+                            UltimaMsgErro = $"ATENÇÃO: ServicoConsulta - a linha nr. {contador} do arquivo {arquivo} tem um tamanho inválido.";
+                            contador++;
+                            continue;
+                        }
+
+                        var arrRegistro = linha.Split(';');
+
+                        if (arrRegistro.Length < colunaUf + 1 ) 
+                        {
+                            throw new Exception($"Layout do arquivo {arquivo} incorreto.");
+                        }
+
+                        CNPJ = arrRegistro[colunaCnpj];
+
+                        if (CNPJ.Length != 14)
+                        {
+                            UltimaMsgErro = $"ATENÇÃO: ServicoConsulta - o CNPJ da linha nr. {contador} do arquivo {arquivo} tem um tamanho inválido.";
+                            contador++;
+                            continue;
+                        }
+
+                        UF = arrRegistro[colunaUf];
+
+                        if (UF.Length != 2)
+                        {
+                            UltimaMsgErro = $"ATENÇÃO: ServicoConsulta - a UF da linha nr. {contador} do arquivo {arquivo} tem um tamanho inválido.";
+                            contador++;
+                            continue;
+                        }
+
+                        GeraTxtConsulta(UF, pastaArquivo);
                         contador++;
                     }
                 }

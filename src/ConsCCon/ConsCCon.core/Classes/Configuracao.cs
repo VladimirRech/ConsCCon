@@ -11,8 +11,8 @@ namespace ConsCCon.core
         public string PastaEnvioUninfe { get; set; }
         public string PastaRetornoUninfe { get; set; }
         public string PastaArquivoCSV { get; set; }
-        public int LinhaInicialBaseCNPJ { get; set; }
-        public int ColunaInicialBaseCnpj { get; set; }
+        public int ColunaCnpj { get; set; }
+        public int ColunaUF { get; set; }
 
         public static Configuracao LeConfiguracoes()
         {
@@ -25,8 +25,8 @@ namespace ConsCCon.core
                 PastaEnvioUninfe = ConfigurationManager.AppSettings["PastaEnvioUninfe"]?.ToString(),
                 PastaRetornoUninfe = ConfigurationManager.AppSettings["PastaRetornoUninfe"]?.ToString(),
                 PastaArquivoCSV = ConfigurationManager.AppSettings["PastaArquivoCSV"]?.ToString(),
-                LinhaInicialBaseCNPJ = Convert.ToInt32(ConfigurationManager.AppSettings["LinhaInicialBaseCNPJ"]?.ToString()),
-                ColunaInicialBaseCnpj = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaInicialBaseCnpj"]?.ToString())
+                ColunaCnpj = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaCnpj"]?.ToString()),
+                ColunaUF = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaUF"]?.ToString())
             };
         }
 
@@ -80,14 +80,14 @@ namespace ConsCCon.core
                 }
             }
 
-            if (LinhaInicialBaseCNPJ < 1)
+            if (ColunaCnpj < 1)
             {
-                sb.Append("Configurações: Linha inicial para leitura da base de CNPJ inválida. ");
-            }
+                sb.Append("Configurações: Coluna do CNPJ inválida. ");
+            } 
             
-            if (ColunaInicialBaseCnpj < 1)
+            if (ColunaUF < 1)
             {
-                sb.Append("Configurações: Coluna inicial para leitura da base de CNPJ inválida. ");
+                sb.Append("Configurações: Coluna da UF inválida. ");
             }
 
             if (sb.Length > 0)

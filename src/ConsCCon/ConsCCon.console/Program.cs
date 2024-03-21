@@ -18,9 +18,10 @@ namespace ConsCCon.console
             }
 
             var sc = new ServicoConsulta { CNPJ = "12345678901234" };
-            Console.WriteLine("Lendo C:\\Users\\rechv\\git\\ConsCCon\\src\\Python\\new_file.csv");
+            var arq = "C:\\Users\\rechv\\git\\ConsCCon\\src\\Python\\cnpjs.csv";
+            Console.WriteLine($"Lendo {arq}.");
             // sc.GeraTxtConsulta("PR", cfg.PastaArquivoCSV);
-            if (sc.ProcessaArqTxtBaseCnpj("C:\\Users\\rechv\\git\\ConsCCon\\src\\Python\\new_file.csv", cfg.LinhaInicialBaseCNPJ, cfg.ColunaInicialBaseCnpj, "PR", cfg.PastaEnvioUninfe))
+            if (sc.ProcessaArqTxtBaseCnpj(arq, cfg.ColunaCnpj, cfg.ColunaUF, cfg.PastaEnvioUninfe))
                 Console.WriteLine("Leu arquivo com sucesso.");
         }
     }
