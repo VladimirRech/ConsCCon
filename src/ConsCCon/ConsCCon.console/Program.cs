@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsCCon.core;
+using ConsCCon.core.Classes;
 
 namespace ConsCCon.console
 {
@@ -17,11 +18,11 @@ namespace ConsCCon.console
             if (!cfg.ValidaConfiguracao())
             {
                 Console.WriteLine($"Configurações inválidas: {cfg.UltimaMsgErro}");
+                return;
             }
-            else
-            {
-                Console.WriteLine("Configurações válidas.");
-            }
+
+            var sc = new ServicoConsulta { CNPJ = "12345678901234" };
+            sc.GeraTxtConsulta("PR", cfg.PastaArquivoCSV);
         }
     }
 }
