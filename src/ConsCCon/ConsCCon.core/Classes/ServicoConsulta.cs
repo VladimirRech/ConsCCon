@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
+using System;
+using System.Configuration;
 
 namespace ConsCCon.core.Classes
 {
@@ -30,6 +33,56 @@ namespace ConsCCon.core.Classes
             sb.AppendLine($"CNPJ|{CNPJ}"); 
             sb.AppendLine($"Versao|{Versao}");
             return Utils.GravaArquivo(sb.ToString(), nomeArquivo, false);
+        }
+
+        public bool ProcessaArqTxtBaseCnpj(string arquivo, int primeiraLinha, int primeiraColuna, string UF, string pastaArquivo)
+        {
+            Utils.RegistraLogApp($"INFO: ServicoConsulta - Iniciando leitura do arquivo {arquivo}.");
+
+            if (!File.Exists(arquivo))
+            {
+                UltimaMsgErro = $"ERRO: ServicoConsulta - O arquivo {arquivo} informado não existe.";
+                return false;
+            }
+
+            // Tratamento para as configurações de primeira linha e coluna
+            primeiraColuna--;
+            primeiraLinha--;
+            int contador = 0;
+
+            try
+            {
+                using (StreamReader sr = new StreamReader(arquivo))
+                {
+                    string linha = "";
+
+                    while((linha = sr.ReadLine()) != null)
+                    {
+                        if (contador >= primeiraLinha)
+                        {
+                            if (linha.Length < 14 || linha.Length <= primeiraColuna || linha.Length <= (primeiraColuna + 14))
+                            {
+                                UltimaMsgErro = $"ATENÇÃO: ServicoConsulta - a linha nr. {contador} do arquivo {arquivo} tem um tamanho inválido.";
+                                contador++;
+                                continue;
+                            }
+
+                            CNPJ = linha.Substring(primeiraColuna, 14);
+                            GeraTxtConsulta(UF, pastaArquivo);
+                        }
+
+                        contador++;
+                    }
+                }
+
+                Utils.RegistraLogApp($"INFO: ServicoConsulta - Terminou leitura do arquivo {arquivo}.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CapturaErro(ex);
+                return false;
+            }
         }
     }
 }
