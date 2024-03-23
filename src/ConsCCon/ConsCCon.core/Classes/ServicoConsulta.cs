@@ -1,9 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System;
-using System.Configuration;
-using System.Collections.Generic;
 using System.Xml;
 
 namespace ConsCCon.core.Classes
@@ -124,13 +122,13 @@ namespace ConsCCon.core.Classes
 
                 XmlNode noRaiz = doc.DocumentElement;
                 ProcessaNoXml(noRaiz, ref dict);
+                return true;
             }
             catch (Exception ex)
             {
                 CapturaErro(ex);
                 return false;
             }
-            return true;
         }
 
         private void ProcessaNoXml(XmlNode noXml, ref Dictionary<string, string> dict)
@@ -141,7 +139,35 @@ namespace ConsCCon.core.Classes
             }
             else
             {
-                if (dict.ContainsKey(noXml.Name)) dict[noXml.Name] = noXml.InnerText;
+                if (dict.ContainsKey(noXml.ParentNode.Name)) dict[noXml.ParentNode.Name] = noXml.InnerText;
+            }
+        }
+
+        public bool GravaCSVSaida(Dictionary<string, string> dict,  string arquivo)
+        {
+            try
+            {
+                var sbCab = new StringBuilder();
+                var sbLinha = new StringBuilder();
+
+                foreach (string key in dict.Keys)
+                {
+                    sbCab.Append(key + ";");
+                    sbLinha.Append(dict[key] + ";");
+                }
+
+                if (!File.Exists(arquivo))
+                {
+                    Utils.GravaArquivo(sbCab.ToString().Substring(0, sbCab.ToString().Length - 1) + "\r\n", arquivo, true);
+                }
+
+                Utils.GravaArquivo(sbLinha.ToString().Substring(0, sbLinha.ToString().Length - 1) + "\r\n", arquivo, true);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CapturaErro(ex);
+                return false;
             }
         }
     }
