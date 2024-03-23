@@ -3,6 +3,8 @@ using System.IO;
 using System.Text;
 using System;
 using System.Configuration;
+using System.Collections.Generic;
+using System.Xml;
 
 namespace ConsCCon.core.Classes
 {
@@ -110,6 +112,36 @@ namespace ConsCCon.core.Classes
             {
                 CapturaErro(ex);
                 return false;
+            }
+        }
+
+        public bool LeXml(string arquivo, ref Dictionary<string, string> dict)
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(arquivo);
+
+                XmlNode noRaiz = doc.DocumentElement;
+                ProcessaNoXml(noRaiz, ref dict);
+            }
+            catch (Exception ex)
+            {
+                CapturaErro(ex);
+                return false;
+            }
+            return true;
+        }
+
+        private void ProcessaNoXml(XmlNode noXml, ref Dictionary<string, string> dict)
+        {
+            if (noXml.HasChildNodes)
+            {
+                foreach(XmlNode child in noXml.ChildNodes) ProcessaNoXml(child, ref dict);
+            }
+            else
+            {
+                if (dict.ContainsKey(noXml.Name)) dict[noXml.Name] = noXml.InnerText;
             }
         }
     }
