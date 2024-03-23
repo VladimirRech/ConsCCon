@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ConsCCon.core
 {
@@ -14,6 +17,19 @@ namespace ConsCCon.core
         public int ColunaCnpj { get; set; }
         public int ColunaUF { get; set; }
 
+        private string _TagsRetornoXml;
+
+        public string TagsRetornoXml
+        {
+            get { return _TagsRetornoXml; }
+            set { _TagsRetornoXml = value; }
+        }
+        
+        public IEnumerable<string> ListaTagsRetornoXml
+        {
+            get { return TagsRetornoXml.Split(';').ToList(); }
+        }
+
         public static Configuracao LeConfiguracoes()
         {
             Utils.RegistraLogApp("INFO: Lendo configurações.");
@@ -26,7 +42,8 @@ namespace ConsCCon.core
                 PastaRetornoUninfe = ConfigurationManager.AppSettings["PastaRetornoUninfe"]?.ToString(),
                 PastaArquivoCSV = ConfigurationManager.AppSettings["PastaArquivoCSV"]?.ToString(),
                 ColunaCnpj = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaCnpj"]?.ToString()),
-                ColunaUF = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaUF"]?.ToString())
+                ColunaUF = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaUF"]?.ToString()),
+                TagsRetornoXml = ConfigurationManager.AppSettings["TagsRetornoXml"]?.ToString()
             };
         }
 
