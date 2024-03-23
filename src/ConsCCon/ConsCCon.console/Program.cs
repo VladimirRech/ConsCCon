@@ -2,6 +2,7 @@
 using ConsCCon.core.Classes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ConsCCon.console
@@ -34,7 +35,14 @@ namespace ConsCCon.console
             var dic = new Dictionary<string, string>();
 
             cfg.ListaTagsRetornoXml.ToList().ForEach(obj => dic.Add(obj, ""));
-            sc.LeXml(xmlArq, ref dic);
+
+            if (sc.LeXml(xmlArq, ref dic))
+            {
+                var csvArq = Path.Combine(cfg.PastaArquivoCSV, "arq.csv");
+
+                if (sc.GravaCSVSaida(dic, csvArq)) Utils.RegistraLogApp($"INFO: Gravou arquivo {csvArq} com sucesso.");
+            }
+
             Console.Write("Pressione ENTER");
             Console.ReadLine();
         }
