@@ -40,7 +40,7 @@ namespace ConsCCon.console
             {
                 var csvArq = Path.Combine(cfg.PastaArquivoCSV, "arq.csv");
 
-                if (sc.GravaCSVSaida(dic, csvArq)) Utils.RegistraLogApp($"INFO: Gravou arquivo {csvArq} com sucesso.");
+                if (sc.GravaCSVSaida(dic, cfg)) Utils.RegistraLogApp($"INFO: Gravou arquivo arquivo csv com sucesso.");
             }
 
             Console.Write("Pressione ENTER");

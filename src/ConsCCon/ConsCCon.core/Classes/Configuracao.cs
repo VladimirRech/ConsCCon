@@ -24,13 +24,24 @@ namespace ConsCCon.core
             get { return _TagsRetornoXml; }
             set { _TagsRetornoXml = value; }
         }
-        
+
         public IEnumerable<string> ListaTagsRetornoXml
         {
             get { return TagsRetornoXml.Split(';').ToList(); }
         }
 
         public string NomeArquivoCSV { get; set; }
+
+        public Dictionary<string, string> PadraoArqCDSV { get; private set; }
+
+        public Configuracao()
+        {
+            PadraoArqCDSV = new Dictionary<string, string>();
+            PadraoArqCDSV.Add("DDMMYYYY", "ddMMyyyy");
+            PadraoArqCDSV.Add("YYYYMMDD", "yyyyMMdd");
+            PadraoArqCDSV.Add("YYYYMM", "yyyyMM");
+            PadraoArqCDSV.Add("MMYYYY", "MMyyyy");
+        }
 
         public static Configuracao LeConfiguracoes()
         {

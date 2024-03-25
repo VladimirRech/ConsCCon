@@ -143,12 +143,24 @@ namespace ConsCCon.core.Classes
             }
         }
 
-        public bool GravaCSVSaida(Dictionary<string, string> dict,  string arquivo)
+        public bool GravaCSVSaida(Dictionary<string, string> dict, Configuracao config)
         {
             try
             {
+                string arquivo = config.NomeArquivoCSV;
+
+                foreach (string key in config.PadraoArqCDSV.Keys)
+                {
+                    if (config.NomeArquivoCSV.Contains(key))
+                    {
+                        arquivo = config.NomeArquivoCSV.Replace($"{key}", $"{DateTime.Today.ToString($"{config.PadraoArqCDSV[key]}")}");
+                        break;
+                    }
+                }
+                
                 var sbCab = new StringBuilder();
                 var sbLinha = new StringBuilder();
+                arquivo = Path.Combine(config.PastaArquivoCSV, arquivo);
 
                 foreach (string key in dict.Keys)
                 {
@@ -158,10 +170,11 @@ namespace ConsCCon.core.Classes
 
                 if (!File.Exists(arquivo))
                 {
-                    Utils.GravaArquivo(sbCab.ToString().Substring(0, sbCab.ToString().Length - 1) + "\r\n", arquivo, true);
+                    Utils.GravaArquivo(sbCab.ToString().Substring(0, sbCab.ToString().Length - 1) + "\r\n", arquivo, false);
                 }
 
                 Utils.GravaArquivo(sbLinha.ToString().Substring(0, sbLinha.ToString().Length - 1) + "\r\n", arquivo, true);
+                Utils.RegistraLogApp($"INFO: Gravou arquivo arquivo {arquivo} com sucesso.");
                 return true;
             }
             catch (Exception ex)
