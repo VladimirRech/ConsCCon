@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace ConsCCon.core
 {
@@ -30,6 +30,8 @@ namespace ConsCCon.core
             get { return TagsRetornoXml.Split(';').ToList(); }
         }
 
+        public string NomeArquivoCSV { get; set; }
+
         public static Configuracao LeConfiguracoes()
         {
             Utils.RegistraLogApp("INFO: Lendo configurações.");
@@ -43,7 +45,8 @@ namespace ConsCCon.core
                 PastaArquivoCSV = ConfigurationManager.AppSettings["PastaArquivoCSV"]?.ToString(),
                 ColunaCnpj = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaCnpj"]?.ToString()),
                 ColunaUF = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaUF"]?.ToString()),
-                TagsRetornoXml = ConfigurationManager.AppSettings["TagsRetornoXml"]?.ToString()
+                TagsRetornoXml = ConfigurationManager.AppSettings["TagsRetornoXml"]?.ToString(),
+                NomeArquivoCSV = ConfigurationManager.AppSettings["NomeArquivoCSV"]?.ToString()
             };
         }
 
@@ -107,6 +110,18 @@ namespace ConsCCon.core
                 sb.Append("Configurações: Coluna da UF inválida. ");
             }
 
+            if (string.IsNullOrEmpty(NomeArquivoCSV))
+            {
+                sb.Append("Configuração do nome do arquivo CSV inválida.");
+            }
+            else
+            {
+                if (!ValidaNomeArquivo(NomeArquivoCSV))
+                {
+                    sb.Append($"Verifique a configuração NomeArquivoCSV, o conteúdo é inválido: {NomeArquivoCSV} ");
+                }
+            }
+
             if (sb.Length > 0)
             {
                 StackErro = "";
@@ -115,6 +130,12 @@ namespace ConsCCon.core
             }
 
             return true;
+        }
+
+        private bool ValidaNomeArquivo(string padrao)
+        {
+            var regex = new Regex("^([^\\/:\\*\\?\"<>\\|]+)$");
+            return regex.IsMatch(padrao);
         }
     }
 }
