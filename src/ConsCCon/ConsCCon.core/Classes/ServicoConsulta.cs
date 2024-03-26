@@ -21,17 +21,18 @@ namespace ConsCCon.core.Classes
                 return false;
             }
 
-            if (string.IsNullOrEmpty(uf))
+            UF = uf;
+
+            if (string.IsNullOrEmpty(UF))
             {
                 UltimaMsgErro = "ATENÇÃO: ServicoConsulta - UF informada em branco.";
                 return false;
             }
 
-            UF = uf;
             var nomeArquivo = Path.Combine(pastaArquivo, $"{CNPJ}-cons-cad.txt");
             var sb = new StringBuilder();
             sb.AppendLine($"xServ|{xServ}");
-            sb.AppendLine($"UF|{uf}");
+            sb.AppendLine($"UF|{UF}");
             sb.AppendLine($"CNPJ|{CNPJ}"); 
             sb.AppendLine($"Versao|{Versao}");
             return Utils.GravaArquivo(sb.ToString(), nomeArquivo, false);
