@@ -9,6 +9,11 @@ namespace ConsCCon.core
 {
     public class Configuracao : BaseLog
     {
+        const int MIN_SEGUNDOS_RETORNO = 30;
+        const int MAX_SEGUNDOS_RETORNO = 600;
+        const int MIN_REPETICOES_RETORNO = 1;
+        const int MAX_REPETICOES_RETORNO = 10;
+
         public string CNPJCliente { get; set; }
         public string UFCliente { get; set; }
         public string PastaEnvioUninfe { get; set; }
@@ -34,6 +39,10 @@ namespace ConsCCon.core
 
         public Dictionary<string, string> PadraoArqCDSV { get; private set; }
 
+        public int SegundosEsperaRetorno { get; set; }
+        public int RepeticoesRetorno { get; set; }
+        public string PastaArquivosLidos { get; set; }
+
         public Configuracao()
         {
             PadraoArqCDSV = new Dictionary<string, string>();
@@ -57,7 +66,10 @@ namespace ConsCCon.core
                 ColunaCnpj = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaCnpj"]?.ToString()),
                 ColunaUF = Convert.ToInt32(ConfigurationManager.AppSettings["ColunaUF"]?.ToString()),
                 TagsRetornoXml = ConfigurationManager.AppSettings["TagsRetornoXml"]?.ToString(),
-                NomeArquivoCSV = ConfigurationManager.AppSettings["NomeArquivoCSV"]?.ToString()
+                NomeArquivoCSV = ConfigurationManager.AppSettings["NomeArquivoCSV"]?.ToString(),
+                SegundosEsperaRetorno = Convert.ToInt32(ConfigurationManager.AppSettings["SegundosEsperaRetorno"]?.ToString()),
+                RepeticoesRetorno = Convert.ToInt32(ConfigurationManager.AppSettings["RepeticoesRetorno"]?.ToString()),
+                PastaArquivosLidos = ConfigurationManager.AppSettings["PastaArquivosLidos"]?.ToString()
             };
         }
 
@@ -130,6 +142,28 @@ namespace ConsCCon.core
                 if (!ValidaNomeArquivo(NomeArquivoCSV))
                 {
                     sb.Append($"Verifique a configuração NomeArquivoCSV, o conteúdo é inválido: {NomeArquivoCSV} ");
+                }
+            }
+
+            if (SegundosEsperaRetorno < MIN_SEGUNDOS_RETORNO || SegundosEsperaRetorno > MAX_SEGUNDOS_RETORNO)
+            {
+                sb.Append("Tempo de espera entre as leituras de retorno da consulta é inválido, verifique a configuração SegundosEsperaRetorno. ");
+            }
+
+            if (RepeticoesRetorno < MIN_REPETICOES_RETORNO || RepeticoesRetorno > MAX_REPETICOES_RETORNO)
+            {
+                sb.Append("Número de repetições das leituras de retorno da consulta é inválido, verifique a configuração RepeticoesRetorno. ");
+            }
+
+            if (string.IsNullOrEmpty(PastaArquivosLidos))
+            {
+                sb.Append("Configurações: Pasta para armazenar retornos lidos inválida, verifique a configuração PastaArquivosLidos. ");
+            }
+            else
+            {
+                if (!System.IO.Directory.Exists(PastaArquivosLidos))
+                {
+                    sb.Append($"Configurações: a pasta {PastaArquivosLidos} informada na chave PastaArquivosLidos não existe. ");
                 }
             }
 
