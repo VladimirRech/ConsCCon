@@ -1,8 +1,6 @@
 ﻿using ConsCCon.core;
 using ConsCCon.core.Classes;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace ConsCCon.console
@@ -51,6 +49,12 @@ namespace ConsCCon.console
                     }
                     break;
                 case Modo.LER_RETORNO:
+                    var pr = new ProcessaRetorno();
+
+                    if (pr.ProcessarPasta(cfg))
+                    {
+                        Console.WriteLine("Leu os arquivos de retorno com sucesso.");
+                    }
                     break;
                 default:
                     break;
@@ -100,11 +104,6 @@ namespace ConsCCon.console
         {
             var sc = new ServicoConsulta { CNPJ = cnpj, UF = uf };
             return sc.GeraTxtConsulta(uf, pastaEnvioUninfe);
-        }
-
-        private static bool consultaCnpj(string arq, Configuracao cfg)
-        {
-            return new ServicoConsulta().ProcessaArqTxtBaseCnpj(arq, cfg.ColunaCnpj, cfg.ColunaUF, cfg.PastaEnvioUninfe);
         }
     }
 }

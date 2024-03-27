@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Classes\BaseLog.cs" />
     <Compile Include="Classes\Configuracao.cs" />
+    <Compile Include="Classes\ProcessaRetorno.cs" />
     <Compile Include="Classes\ServicoConsulta.cs" />
     <Compile Include="Classes\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
