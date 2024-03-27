@@ -42,6 +42,7 @@ namespace ConsCCon.core
         public int SegundosEsperaRetorno { get; set; }
         public int RepeticoesRetorno { get; set; }
         public string PastaArquivosLidos { get; set; }
+        public string PadraoArquivoRet { get; set; }
 
         public Configuracao()
         {
@@ -69,7 +70,8 @@ namespace ConsCCon.core
                 NomeArquivoCSV = ConfigurationManager.AppSettings["NomeArquivoCSV"]?.ToString(),
                 SegundosEsperaRetorno = Convert.ToInt32(ConfigurationManager.AppSettings["SegundosEsperaRetorno"]?.ToString()),
                 RepeticoesRetorno = Convert.ToInt32(ConfigurationManager.AppSettings["RepeticoesRetorno"]?.ToString()),
-                PastaArquivosLidos = ConfigurationManager.AppSettings["PastaArquivosLidos"]?.ToString()
+                PastaArquivosLidos = ConfigurationManager.AppSettings["PastaArquivosLidos"]?.ToString(),
+                PadraoArquivoRet = ConfigurationManager.AppSettings["PadraoArquivoRet"]?.ToString()
             };
         }
 
@@ -135,7 +137,7 @@ namespace ConsCCon.core
 
             if (string.IsNullOrEmpty(NomeArquivoCSV))
             {
-                sb.Append("Configuração do nome do arquivo CSV inválida.");
+                NomeArquivoCSV = "arquivo_padrao_retorno_yyyyMM.csv";
             }
             else
             {
@@ -147,12 +149,12 @@ namespace ConsCCon.core
 
             if (SegundosEsperaRetorno < MIN_SEGUNDOS_RETORNO || SegundosEsperaRetorno > MAX_SEGUNDOS_RETORNO)
             {
-                sb.Append("Tempo de espera entre as leituras de retorno da consulta é inválido, verifique a configuração SegundosEsperaRetorno. ");
+                SegundosEsperaRetorno = MIN_SEGUNDOS_RETORNO;
             }
 
             if (RepeticoesRetorno < MIN_REPETICOES_RETORNO || RepeticoesRetorno > MAX_REPETICOES_RETORNO)
             {
-                sb.Append("Número de repetições das leituras de retorno da consulta é inválido, verifique a configuração RepeticoesRetorno. ");
+                RepeticoesRetorno = MAX_REPETICOES_RETORNO;
             }
 
             if (string.IsNullOrEmpty(PastaArquivosLidos))
@@ -165,6 +167,11 @@ namespace ConsCCon.core
                 {
                     sb.Append($"Configurações: a pasta {PastaArquivosLidos} informada na chave PastaArquivosLidos não existe. ");
                 }
+            }
+
+            if (string.IsNullOrEmpty(PadraoArquivoRet))
+            {
+                PadraoArquivoRet = "*-ret-cons-cad.xml";
             }
 
             if (sb.Length > 0)
