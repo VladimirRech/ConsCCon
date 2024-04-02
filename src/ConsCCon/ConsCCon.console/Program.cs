@@ -60,8 +60,10 @@ namespace ConsCCon.console
                     break;
             }
 
+#if DEBUG
             Console.Write("Pressione ENTER");
             Console.ReadLine();
+#endif
         }
 
         private static bool validaArgs(string[] args)
