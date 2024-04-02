@@ -43,7 +43,7 @@ namespace ConsCCon.core
                         if (sc.GravaCSVSaida(dic, cfg))
                         {
                             var arqDest = Path.Combine(_pastaProcessados, Path.GetFileName(arq));
-                            File.Move(arq, arqDest);
+                            File.Copy(arq, arqDest, true);
                         }
                         else
                         {
