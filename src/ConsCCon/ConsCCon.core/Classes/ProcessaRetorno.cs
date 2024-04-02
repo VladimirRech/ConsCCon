@@ -35,7 +35,7 @@ namespace ConsCCon.core
                 foreach (string arq in _lstArqsRet)
                 {
                     var dic = new Dictionary<string, string>();
-                    // preenche tas para serem lidas.
+                    // preenche tags para serem lidas.
                     cfg.ListaTagsRetornoXml.ToList().ForEach(obj => dic.Add(obj, ""));
 
                     if (sc.LeXml(arq, ref dic))
@@ -43,7 +43,17 @@ namespace ConsCCon.core
                         if (sc.GravaCSVSaida(dic, cfg))
                         {
                             var arqDest = Path.Combine(_pastaProcessados, Path.GetFileName(arq));
-                            File.Copy(arq, arqDest, true);
+
+                            try
+                            {
+                                File.Copy(arq, arqDest, true);
+                                File.Delete(arqDest);
+                            }
+                            catch (Exception ex)
+                            {
+                                StackErro = ex.StackTrace;
+                                UltimaMsgErro = $"ERRO: ProcessaRetorno - erro movendo arquivos de retorno. {ex.Message}";
+                            }
                         }
                         else
                         {
