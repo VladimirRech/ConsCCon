@@ -123,24 +123,18 @@ namespace ConsCCon.core.Classes
 
                 XmlNode noRaiz = doc.DocumentElement;
                 ProcessaNoXml(noRaiz, ref dict);
+
+                if (string.IsNullOrEmpty(dict["CNPJ"]))
+                {
+                    dict["CNPJ"] = Path.GetFileName(arquivo).Substring(0, 14);
+                }
+
                 return true;
             }
             catch (Exception ex)
             {
                 CapturaErro(ex);
                 return false;
-            }
-        }
-
-        private void ProcessaNoXml(XmlNode noXml, ref Dictionary<string, string> dict)
-        {
-            if (noXml.HasChildNodes)
-            {
-                foreach(XmlNode child in noXml.ChildNodes) ProcessaNoXml(child, ref dict);
-            }
-            else
-            {
-                if (dict.ContainsKey(noXml.ParentNode.Name)) dict[noXml.ParentNode.Name] = noXml.InnerText;
             }
         }
 
@@ -175,13 +169,24 @@ namespace ConsCCon.core.Classes
                 }
 
                 Utils.GravaArquivo(sbLinha.ToString().Substring(0, sbLinha.ToString().Length - 1) + "\r\n", arquivo, true);
-                Utils.RegistraLogApp($"INFO: Gravou arquivo arquivo {arquivo} com sucesso.");
                 return true;
             }
             catch (Exception ex)
             {
                 CapturaErro(ex);
                 return false;
+            }
+        }
+
+        private void ProcessaNoXml(XmlNode noXml, ref Dictionary<string, string> dict)
+        {
+            if (noXml.HasChildNodes)
+            {
+                foreach (XmlNode child in noXml.ChildNodes) ProcessaNoXml(child, ref dict);
+            }
+            else
+            {
+                if (dict.ContainsKey(noXml.ParentNode.Name)) dict[noXml.ParentNode.Name] = noXml.InnerText;
             }
         }
     }
