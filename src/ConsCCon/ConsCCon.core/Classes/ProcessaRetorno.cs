@@ -28,9 +28,12 @@ namespace ConsCCon.core
                 return false;
             }
 
+            string tituloJanela = Console.Title;
+
             try
             {
                 var sc = new ServicoConsulta();
+                var contLidos = 1;
 
                 foreach (string arq in _lstArqsRet)
                 {
@@ -60,6 +63,9 @@ namespace ConsCCon.core
                             UltimaMsgErro = $"ATENÇÃO: ProcessaRetorno - Não foi possível processar o arquivo {arq}.";
                         }
                     }
+
+                    Console.Title = $"Leu {contLidos} arquivo(s) de {_lstArqsRet.Count}";
+                    contLidos++;
                 }
             }
             catch (Exception ex)
@@ -69,6 +75,7 @@ namespace ConsCCon.core
                 return false;
             }
 
+            Console.Title = tituloJanela;
             return true;
         }
 
