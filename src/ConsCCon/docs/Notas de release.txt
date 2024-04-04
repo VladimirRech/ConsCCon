@@ -1,0 +1,8 @@
+RELEASE 0.0.2 - 03/04/2024
+
+Notas de versão:
+- Inclusão do CNPJ e UF no arquivo quando o retorno vier com erro. Para incluir a UF, no arquivo de configurações adicione "UF" sem aspas ao valor da chave TagsRetornoXml em qualquer posição. 
+- Tratamento para sobrescrever o arquivo na pasta de XML lidos.
+- Correção de erro ocorrendo ao tentar mover arquivo para pasta de lidos quando já existe.
+- Melhoria das mensagens de erro e de retorno.
+- Adicionado processamento de arquivos de erro do UNINFE.
