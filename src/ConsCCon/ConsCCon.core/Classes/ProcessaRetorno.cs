@@ -50,7 +50,7 @@ namespace ConsCCon.core
                             try
                             {
                                 File.Copy(arq, arqDest, true);
-                                File.Delete(arqDest);
+                                File.Delete(arq);
                             }
                             catch (Exception ex)
                             {
