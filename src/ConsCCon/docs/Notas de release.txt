@@ -1,3 +1,9 @@
+RELEASE 0.0.3 - 04/04/2024
+
+Notas de versão:
+- Correção da funcionalidade de mover arquivos de retorno. Não estava movendo.
+
+
 RELEASE 0.0.2 - 03/04/2024
 
 Notas de versão:
