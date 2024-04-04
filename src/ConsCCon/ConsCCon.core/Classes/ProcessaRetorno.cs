@@ -79,6 +79,53 @@ namespace ConsCCon.core
             return true;
         }
 
+        public bool ProcessaArquivosDeErro(string pasta)
+        {
+            string arqDest = Path.Combine(pasta, $"cad_err{DateTime.Now.ToString("ddMMyyyy_HHmmss")}.txt");
+            _padraoArqRet = "*-ret-cons-cad.err";
+            _pastaRetorno = pasta;
+            
+            if (!lePastaRetorno())
+            {
+                StackErro = "";
+                UltimaMsgErro = $"INFO: ProcessaRetorno - Nenhum arquivo encontrado na pasta {_pastaRetorno}";
+                return false;
+            }
+
+            var tituloJanela = Console.Title;
+
+            try
+            {
+                var idx = 0;
+
+                foreach (var item in _lstArqsRet)
+                {
+                    var lines = File.ReadAllLines(item);
+
+                    if (lines.Length == 0)
+                        continue;
+
+                    var obj = lines.ToList().Where(l => l.Contains("Message")).FirstOrDefault();
+
+                    if (obj != null) 
+                    { 
+                        Utils.GravaArquivo(obj + "\r\n", arqDest, true); 
+                    }
+
+                    Console.Title = $"Leu {idx++} arquivo(s) de {_lstArqsRet.Count}";
+                }
+            }
+            catch (Exception ex)
+            {
+                StackErro = ex.StackTrace;
+                UltimaMsgErro = $"ERRO: ProcessaRetorno - erro lendo arquivos de retorno. {ex.Message}";
+            }
+
+            Console.Title = tituloJanela;
+
+            return true;
+        }
+
         private bool lePastaRetorno()
         {
             try
