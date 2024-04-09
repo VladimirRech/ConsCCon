@@ -21,6 +21,8 @@ namespace ConsCCon.core
         public string PastaArquivoCSV { get; set; }
         public int ColunaCnpj { get; set; }
         public int ColunaUF { get; set; }
+        public int TamanhoCnpj { get; set; }
+        public int TamanhoIE { get; set; }
 
         private string _TagsRetornoXml;
 
@@ -71,7 +73,9 @@ namespace ConsCCon.core
                 SegundosEsperaRetorno = Convert.ToInt32(ConfigurationManager.AppSettings["SegundosEsperaRetorno"]?.ToString()),
                 RepeticoesRetorno = Convert.ToInt32(ConfigurationManager.AppSettings["RepeticoesRetorno"]?.ToString()),
                 PastaArquivosLidos = ConfigurationManager.AppSettings["PastaArquivosLidos"]?.ToString(),
-                PadraoArquivoRet = ConfigurationManager.AppSettings["PadraoArquivoRet"]?.ToString()
+                PadraoArquivoRet = ConfigurationManager.AppSettings["PadraoArquivoRet"]?.ToString(),
+                TamanhoCnpj = Convert.ToInt32(ConfigurationManager.AppSettings["TamanhoCnpj"]?.ToString()),
+                TamanhoIE = Convert.ToInt32(ConfigurationManager.AppSettings["TamanhoIE"]?.ToString())
             };
         }
 
@@ -172,6 +176,16 @@ namespace ConsCCon.core
             if (string.IsNullOrEmpty(PadraoArquivoRet))
             {
                 PadraoArquivoRet = "*-ret-cons-cad.xml";
+            }
+
+            if (TamanhoCnpj < 0)
+            {
+                TamanhoCnpj = 14;
+            }
+
+            if (TamanhoIE < 0)
+            {
+                TamanhoIE = 0;
             }
 
             if (sb.Length > 0)
