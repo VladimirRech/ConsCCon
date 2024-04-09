@@ -12,6 +12,16 @@ namespace ConsCCon.core.Classes
         public string UF { get; set; }
         public string xServ { get { return "CONS-CAD"; } }
         public string Versao { get { return "2.00"; } }
+        private int _tamCnpj;
+        private int _tamIE;
+
+        public ServicoConsulta() { }
+
+        public ServicoConsulta(int tamCnpj, int tamIE)
+        {
+            _tamCnpj = tamCnpj;
+            _tamIE = tamIE;
+        }
 
         public bool GeraTxtConsulta(string uf, string pastaArquivo)
         {
@@ -181,6 +191,19 @@ namespace ConsCCon.core.Classes
                 foreach (string key in dict.Keys)
                 {
                     sbCab.Append(key + ";");
+
+                    if (key.ToLower() == "cnpj")
+                    {
+                        sbLinha.Append(dict[key].PadLeft(_tamCnpj, '0') + ";");
+                        continue;
+                    }
+
+                    if (key.ToLower() == "ie")
+                    {
+                        sbLinha.Append(dict[key].PadLeft(_tamIE, '0') + ";");
+                        continue;
+                    }
+
                     sbLinha.Append(dict[key] + ";");
                 }
 

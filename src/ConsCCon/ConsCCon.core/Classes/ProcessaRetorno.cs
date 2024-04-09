@@ -33,7 +33,7 @@ namespace ConsCCon.core
 
             try
             {
-                var sc = new ServicoConsulta();
+                var sc = new ServicoConsulta(cfg.ColunaCnpj, cfg.TamanhoIE);
                 var contLidos = 1;
 
                 foreach (string arq in _lstArqsRet)
