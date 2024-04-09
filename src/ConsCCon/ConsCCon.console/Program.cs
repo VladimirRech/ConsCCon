@@ -15,7 +15,8 @@ namespace ConsCCon.console
             CONSULTAR_CNPJ,
             CONSULTAR_ARQUIVO,
             LER_RETORNO,
-            LER_ERROS
+            LER_ERROS,
+            DEBUG_MODE
         }
 
         static Modo modoAtual;
@@ -71,6 +72,11 @@ namespace ConsCCon.console
                         Console.WriteLine("Leu os arquivos de erro com sucesso.");
                     }
                     break;
+                case Modo.DEBUG_MODE:
+                    {
+                        // código de teste
+                        break;
+                    }
                 default:
                     break;
             }
@@ -114,6 +120,11 @@ namespace ConsCCon.console
                 case "erro":
                     {
                         modoAtual = Modo.LER_ERROS;
+                        break;
+                    }
+                case "debug":
+                    {
+                        modoAtual = Modo.DEBUG_MODE; 
                         break;
                     }
             }
