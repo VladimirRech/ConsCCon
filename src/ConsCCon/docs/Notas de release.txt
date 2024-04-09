@@ -1,6 +1,10 @@
-RELEASE 0.0.5 - 08/04/2024
+RELEASE 0.0.5 - 09/04/2024
 
 Notas de versão:
+- Corrigido: não gerava conteúdo no arquivo CSV quando o XML não possuía dados
+  de retorno, só a mensagem de erro, agora, inclui a mensagem de erro retornada
+  no XML.
+  
 - Inclusão do tratamento na geração do CSV para incluir zeros à esquerda para o
   CNPJ e para a IE. Exemplo de chaves para o arquivo de configuração:
   

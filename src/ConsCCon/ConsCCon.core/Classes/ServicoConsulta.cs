@@ -43,7 +43,7 @@ namespace ConsCCon.core.Classes
             var sb = new StringBuilder();
             sb.AppendLine($"xServ|{xServ}");
             sb.AppendLine($"UF|{UF}");
-            sb.AppendLine($"CNPJ|{CNPJ}"); 
+            sb.AppendLine($"CNPJ|{CNPJ}");
             sb.AppendLine($"Versao|{Versao}");
             return Utils.GravaArquivo(sb.ToString(), nomeArquivo, false);
         }
@@ -69,7 +69,7 @@ namespace ConsCCon.core.Classes
                 {
                     string linha = "";
 
-                    while((linha = sr.ReadLine()) != null)
+                    while ((linha = sr.ReadLine()) != null)
                     {
                         if (contador == 0)
                         {
@@ -86,7 +86,7 @@ namespace ConsCCon.core.Classes
 
                         var arrRegistro = linha.Split(';');
 
-                        if (arrRegistro.Length < colunaUf + 1 ) 
+                        if (arrRegistro.Length < colunaUf + 1)
                         {
                             throw new Exception($"Layout do arquivo {arquivo} incorreto.");
                         }
@@ -124,35 +124,16 @@ namespace ConsCCon.core.Classes
             }
         }
 
-        public bool LeXml(string arquivo, ref Dictionary<string, string> dict)
-        {
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(arquivo);
-
-                XmlNode noRaiz = doc.DocumentElement;
-                ProcessaNoXml(noRaiz, ref dict);
-
-                if (string.IsNullOrEmpty(dict["CNPJ"]))
-                {
-                    dict["CNPJ"] = Path.GetFileName(arquivo).Substring(0, 14);
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                CapturaErro(ex);
-                return false;
-            }
-        }
-
         public bool LeXml(string arquivo, ref Dictionary<string, string> dict, Configuracao config)
         {
             var xmlDoc = new XmlDocument();
             xmlDoc.Load(arquivo);
             XmlNodeList nodes = xmlDoc.GetElementsByTagName("infCad");
+
+            if (nodes.Count == 0)
+            {
+                nodes = xmlDoc.GetElementsByTagName("infCons");
+            }
 
             foreach (XmlNode node in nodes)
             {
@@ -183,7 +164,7 @@ namespace ConsCCon.core.Classes
                         break;
                     }
                 }
-                
+
                 var sbCab = new StringBuilder();
                 var sbLinha = new StringBuilder();
                 arquivo = Path.Combine(config.PastaArquivoCSV, arquivo);
@@ -234,7 +215,7 @@ namespace ConsCCon.core.Classes
             }
         }
 
-        private void processaChildrenNodes(XmlNode node, ref Dictionary<string,string> dic)
+        private void processaChildrenNodes(XmlNode node, ref Dictionary<string, string> dic)
         {
             if (node.NodeType == XmlNodeType.Element && node.ChildNodes.Count > 1)
                 foreach (XmlNode child in node.ChildNodes)
