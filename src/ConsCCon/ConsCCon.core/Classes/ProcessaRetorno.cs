@@ -1,6 +1,7 @@
 ﻿using ConsCCon.core.Classes;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 
@@ -41,28 +42,22 @@ namespace ConsCCon.core
                     // preenche tags para serem lidas.
                     cfg.ListaTagsRetornoXml.ToList().ForEach(obj => dic.Add(obj, ""));
 
-                    if (sc.LeXml(arq, ref dic))
-                    {
-                        if (sc.GravaCSVSaida(dic, cfg))
-                        {
-                            var arqDest = Path.Combine(_pastaProcessados, Path.GetFileName(arq));
+                    if (!sc.LeXml(arq, ref dic, cfg))
+                        continue;
+#if !DEBUG
+                        var arqDest = Path.Combine(_pastaProcessados, Path.GetFileName(arq));
 
-                            try
-                            {
-                                File.Copy(arq, arqDest, true);
-                                File.Delete(arq);
-                            }
-                            catch (Exception ex)
-                            {
-                                StackErro = ex.StackTrace;
-                                UltimaMsgErro = $"ERRO: ProcessaRetorno - erro movendo arquivos de retorno. {ex.Message}";
-                            }
-                        }
-                        else
+                        try
                         {
-                            UltimaMsgErro = $"ATENÇÃO: ProcessaRetorno - Não foi possível processar o arquivo {arq}.";
+                            File.Copy(arq, arqDest, true);
+                            File.Delete(arq);
                         }
-                    }
+                        catch (Exception ex)
+                        {
+                            StackErro = ex.StackTrace;
+                            UltimaMsgErro = $"ERRO: ProcessaRetorno - erro movendo arquivos de retorno. {ex.Message}";
+                        }
+#endif
 
                     Console.Title = $"Leu {contLidos} arquivo(s) de {_lstArqsRet.Count}";
                     contLidos++;

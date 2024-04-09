@@ -138,6 +138,27 @@ namespace ConsCCon.core.Classes
             }
         }
 
+        public bool LeXml(string arquivo, ref Dictionary<string, string> dict, Configuracao config)
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(arquivo);
+            XmlNodeList nodes = xmlDoc.GetElementsByTagName("infCad");
+
+            foreach (XmlNode node in nodes)
+            {
+                processaChildrenNodes(node, ref dict);
+
+                if (!GravaCSVSaida(dict, config))
+                {
+                    StackErro = "";
+                    UltimaMsgErro = $"ATENÇÃO: ServicoConsulta.LeXml - Não foi possível ler o arquivo {arquivo}";
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public bool GravaCSVSaida(Dictionary<string, string> dict, Configuracao config)
         {
             try
@@ -187,6 +208,20 @@ namespace ConsCCon.core.Classes
             else
             {
                 if (dict.ContainsKey(noXml.ParentNode.Name)) dict[noXml.ParentNode.Name] = noXml.InnerText;
+            }
+        }
+
+        private void processaChildrenNodes(XmlNode node, ref Dictionary<string,string> dic)
+        {
+            if (node.NodeType == XmlNodeType.Element && node.ChildNodes.Count > 1)
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    processaChildrenNodes(child, ref dic);
+                }
+            else
+            {
+                if (dic.ContainsKey(node.Name))
+                    dic[node.Name] = node.InnerText;
             }
         }
     }
