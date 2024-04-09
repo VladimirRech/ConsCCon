@@ -1,3 +1,10 @@
+RELEASE 0.0.4 - 08/04/2024
+
+Notas de versão:
+- Alterada a forma de leitura do arquivo XML de retorno.
+  Quando o arquivo tiver várias ocorrências de IE para um mesmo CNPJ, irá ler e
+  gravar todas elas no arquivo CSV de saída, uma linha para cada registro.
+
 RELEASE 0.0.3 - 04/04/2024
 
 Notas de versão:
