@@ -8,7 +8,7 @@ namespace ConsCCon.console
     internal class Program
     {
         static string[] helpArgs = new string[5] { "/?", "/h", "-h", "--help", "-?" };
-        
+
         enum Modo
         {
             INDEFINIDO,
@@ -25,12 +25,12 @@ namespace ConsCCon.console
         {
             if (!validaArgs(args)) return;
 
-            Console.WriteLine("Lendo configurações.");
+            EscreveLog("Lendo configurações.", true);
             Configuracao cfg = Configuracao.LeConfiguracoes();
 
             if (!cfg.ValidaConfiguracao())
             {
-                Console.WriteLine($"Configurações inválidas: {cfg.UltimaMsgErro}");
+                EscreveLog($"Configurações inválidas: {cfg.UltimaMsgErro}", true);
                 return;
             }
 
@@ -39,37 +39,37 @@ namespace ConsCCon.console
                 case Modo.INDEFINIDO:
                     return;
                 case Modo.CONSULTAR_CNPJ:
-                    Console.WriteLine("Iniciando geração de XML para consulta de CNPJ.");
+                    EscreveLog("Iniciando geração de XML para consulta de CNPJ.", true);
 
                     if (consultaCnpj(args[1], args[2], cfg.PastaEnvioUninfe))
                     {
-                        Console.WriteLine($"Gerou dados da consulta do CNPJ {args[1]} para o Estado {args[2]}.");
+                        EscreveLog($"Gerou dados da consulta do CNPJ {args[1]} para o Estado {args[2]}.", true);
                     }
                     break;
                 case Modo.CONSULTAR_ARQUIVO:
-                    Console.WriteLine("Iniciando geração de XML para consulta de CNPJ a partir de arquivo.");
+                    EscreveLog("Iniciando geração de XML para consulta de CNPJ a partir de arquivo.", true);
 
                     if (new ServicoConsulta().ProcessaArqTxtBaseCnpj(args[1], cfg.ColunaCnpj, cfg.ColunaUF, cfg.PastaEnvioUninfe))
                     {
-                        Console.WriteLine($"Gerou dados de consulta para o arquivo {args[1]}.");
+                        EscreveLog($"Gerou dados de consulta para o arquivo {args[1]}.", true);
                     }
                     break;
                 case Modo.LER_RETORNO:
                     var pr = new ProcessaRetorno();
-                    Console.WriteLine("Iniciando leitura de arquivos de retorno.");
+                    EscreveLog("Iniciando leitura de arquivos de retorno.", true);
 
                     if (pr.ProcessarPasta(cfg))
                     {
-                        Console.WriteLine("Leu os arquivos de retorno com sucesso.");
+                        EscreveLog("Leu os arquivos de retorno com sucesso.", true);
                     }
                     break;
                 case Modo.LER_ERROS:
                     var prErro = new ProcessaRetorno();
-                    Console.WriteLine("Lendo arquivos de erro.");
+                    EscreveLog("Lendo arquivos de erro.", true);
 
                     if (prErro.ProcessaArquivosDeErro(cfg.PastaRetornoUninfe))
                     {
-                        Console.WriteLine("Leu os arquivos de erro com sucesso.");
+                        EscreveLog("Leu os arquivos de erro com sucesso.", true);
                     }
                     break;
                 case Modo.DEBUG_MODE:
@@ -81,7 +81,7 @@ namespace ConsCCon.console
                     break;
             }
 
-            Console.WriteLine("Operação concluída.");
+            EscreveLog("Operação concluída.", true);
 
 #if DEBUG
             Console.Write("Pressione ENTER");
@@ -114,7 +114,7 @@ namespace ConsCCon.console
                     }
                 case "ler":
                     {
-                        modoAtual = modoAtual = Modo.LER_RETORNO; 
+                        modoAtual = modoAtual = Modo.LER_RETORNO;
                         break;
                     }
                 case "erro":
@@ -124,7 +124,7 @@ namespace ConsCCon.console
                     }
                 case "debug":
                     {
-                        modoAtual = Modo.DEBUG_MODE; 
+                        modoAtual = Modo.DEBUG_MODE;
                         break;
                     }
             }
@@ -141,6 +141,16 @@ namespace ConsCCon.console
         {
             var sc = new ServicoConsulta { CNPJ = cnpj, UF = uf };
             return sc.GeraTxtConsulta(uf, pastaEnvioUninfe);
+        }
+
+        private static void EscreveLog(string msg, bool escreveConsole)
+        {
+            Utils.RegistraLogApp(msg);
+
+            if (escreveConsole)
+            {
+                Console.WriteLine(msg);
+            }
         }
     }
 }
